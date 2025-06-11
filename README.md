@@ -208,3 +208,32 @@ export default defineConfig([
   { files: ["**/*.{js,mjs,cjs}"], languageOptions: { globals: globals.browser } },
 ]);
 ```
+---
+## 5. Mise en place de GitHub Actions
+![Screenshot GitHub Actions](screenshot-actions.png)
+
+
+---
+## 6.Simulation d’un travail d’équipe
+1. Création de la branche feature/ajout-fonction :
+```bash
+tp-eslint-git % git branch
+* feature/ajout-fonction
+  main
+```
+
+2. Erreur quand j'essaye de commit ce fichier `utils.js`:
+```javascript
+console . log(123)
+```
+```bash
+git commit -m "Code non conforme"
+
+/Users/franck/WebstormProjects/tp-eslint-git/.github/utils.js
+  1:19  error  Missing semicolon  semi
+
+✖ 1 problem (1 error, 0 warnings)
+  1 error and 0 warnings potentially fixable with the `--fix` option.
+```
+
+3. ![Screenshot Pull Request](screenshot-pr.png)
