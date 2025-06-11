@@ -4,10 +4,10 @@ function additionner(a,b){
   return result;
 }
 
-const unusedVar = 42;
+// const unusedVar = 42;
 
 function division(x, y) {
-  if (y == 0) {
+  if (y === 0) {
     console.log('Division par zéro !');
     return;
   }
@@ -16,11 +16,14 @@ function division(x, y) {
 
 console.log(additionner(5,3));
 
-const message = 'Bonjour le monde';
+// const message = 'Bonjour le monde';
 
-if (false) {
-  console.log('Ce code ne s\'exécutera jamais');
-}
+// if (false) {
+//   console.log('Ce code ne s\'exécutera jamais');
+// }
+
+console.log('Ce code ne s\'exécutera jamais');
+
 
 const tableau = [
   'pomme',
@@ -28,8 +31,10 @@ const tableau = [
   'orange'
 ];
 
+console.log(tableau[0]);
+
 const nombre = '10';
-if (nombre == 10) {
+if (nombre === '10') {
   console.log('Nombre égal à 10');
 }
 
@@ -49,22 +54,28 @@ function toutFaire() {
   console.log('Fin');
 }
 
+toutFaire();
+
 setTimeout(() => {
   console.log('Timeout');
 });
 
 const d = new Date();
 
-function fetchData() {
-  fetch('https://api.example.com')
-    .then(response => response.json());
-}
+console.log('Date actuelle:', d);
+
+// function fetchData() {
+//   fetch('https://api.example.com')
+//     .then(response => response.json());
+// }
 
 const nombres = [1, 2, 3].map(n => {
   return n * 2;
 });
 
-debugger;
+console.log(nombres);
+
+// debugger;
 
 module.exports = {
   additionner: additionner,

@@ -81,3 +81,130 @@ husky - install command is DEPRECATED
 ```bash
 husky - add command is DEPRECATED
 ```
+
+3. Lorsque je test le hook en faisant un commit, tout se passe bien je n'ai pas d'erreurs ce qui est bizarre.
+Il semblerait que cela soit dû à une mauvaise configuration, j'utilise donc `git config core.hooksPath .husky
+` (car le path était `husky/_hooks` au lieu de `.husky`) et cela fonctionne.
+J'obtiens le message d'erreur suivant :
+```bash
+git commit -m "Test du hook ESLint 2"
+
+   1:16  error  Strings must use singlequote  quotes
+   2:21  error  Strings must use singlequote  quotes
+   3:30  error  Strings must use singlequote  quotes
+   7:13  error  Strings must use singlequote  quotes
+   9:15  error  Strings must use singlequote  quotes
+  11:14  error  Strings must use singlequote  quotes
+  11:23  error  Strings must use singlequote  quotes
+  12:16  error  Strings must use singlequote  quotes
+  13:16  error  Strings must use singlequote  quotes
+  13:25  error  Strings must use singlequote  quotes
+  14:7   error  Strings must use singlequote  quotes
+  14:26  error  Strings must use singlequote  quotes
+  17:13  error  Strings must use singlequote  quotes
+  17:56  error  Strings must use singlequote  quotes
+  18:13  error  Strings must use singlequote  quotes
+
+   7:7   error  'unusedVar' is assigned a value but never used  no-unused-vars
+  19:7   error  'message' is assigned a value but never used    no-unused-vars
+  21:5   error  Unexpected constant condition                   no-constant-condition
+  25:7   error  'tableau' is assigned a value but never used    no-unused-vars
+  36:10  error  'toutFaire' is defined but never used           no-unused-vars
+  56:7   error  'd' is assigned a value but never used          no-unused-vars
+  58:10  error  'fetchData' is defined but never used           no-unused-vars
+  63:7   error  'nombres' is assigned a value but never used    no-unused-vars
+  67:1   error  Unexpected 'debugger' statement                 no-debugger
+
+✖ 24 problems (24 errors, 0 warnings)
+  15 errors and 0 warnings potentially fixable with the `--fix` option.
+
+```
+---
+
+## 4. Configuration avancée d’ESLint
+
+1. J'utilise un fichier `eslint.config.mjs` et non un `.eslintrc.json` : 
+```mjs
+export default defineConfig([
+  {
+    files: ["**/*.{js,mjs,cjs}"],
+    plugins: { js },
+    extends: ["airbnb-base"],
+    rules: {
+      "no-console": "warn",
+      indent: ["error", 2],
+      quotes: ["error", "single"],
+    },
+    languageOptions: {
+      globals: globals.browser,
+      env: {
+        browser: true,
+        node: true,
+      },
+    },
+  },
+  { files: ["**/*.js"], languageOptions: { sourceType: "commonjs" } },
+]);
+```
+
+2. Le package.json à jour avec le lint :
+```json
+{
+  "name": "tp-eslint-git",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install",
+    "lint": "eslint ."
+  },
+  "private": true,
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.28.0",
+    "eslint": "^9.28.0",
+    "globals": "^16.2.0",
+    "husky": "^9.1.7"
+  }
+}
+```
+
+3. Cela ne fonctionne pas, j'ai les erreurs suivants : 
+```bash
+Oops! Something went wrong! :(
+
+ESLint: 9.28.0
+
+TypeError: Plugin "" not found.
+    at findPluginConfig (/Users/franck/WebstormProjects/tp-eslint-git/node_modules/@eslint/config-helpers/dist/cjs/index.cjs:251:9)
+    at /Users/franck/WebstormProjects/tp-eslint-git/node_modules/@eslint/config-helpers/dist/cjs/index.cjs:415:25
+    at Array.map (<anonymous>)
+    at processExtends (/Users/franck/WebstormProjects/tp-eslint-git/node_modules/@eslint/config-helpers/dist/cjs/index.cjs:413:36)
+    at /Users/franck/WebstormProjects/tp-eslint-git/node_modules/@eslint/config-helpers/dist/cjs/index.cjs:485:38
+    at Array.flatMap (<anonymous>)
+    at processConfigList (/Users/franck/WebstormProjects/tp-eslint-git/node_modules/@eslint/config-helpers/dist/cjs/index.cjs:485:20)
+    at defineConfig (/Users/franck/WebstormProjects/tp-eslint-git/node_modules/@eslint/config-helpers/dist/cjs/index.cjs:520:9)
+    at file:///Users/franck/WebstormProjects/tp-eslint-git/eslint.config.mjs?mtime=1749654260284:5:16
+    at ModuleJob.run (node:internal/modules/esm/module_job:234:25)
+```
+J'ai donc remis cette config : 
+```mjs
+export default defineConfig([
+  {
+    files: ["**/*.{js,mjs,cjs}"],
+    plugins: { js },
+    extends: ["js/recommended"],
+    rules: {
+      semi: ["error", "always"],
+      indent: ["error", 2],
+      quotes: ["error", "single"],
+      "no-unused-vars": ["error"]
+    }
+  },
+  { files: ["**/*.js"], languageOptions: { sourceType: "commonjs" } },
+  { files: ["**/*.{js,mjs,cjs}"], languageOptions: { globals: globals.browser } },
+]);
+```
